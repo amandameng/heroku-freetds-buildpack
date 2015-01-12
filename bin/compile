@@ -1,11 +1,22 @@
-#!/usr/bin/env bash
-echo "-----&gt; Installing freetds 0.91"
-# change to the the BUILD_DIR ($1)
-cd $1
-# download the binary (-O) silently (-s)
-#curl https://github.com/amandameng/freetds-binary/blob/master/freetds-0.91.tar.gz -s -O -ssl3
-curl app.staging.aisleiq.com/freetds/freetds-0.91.tar.gz -s -O -ssl3
-# make a directory to untar (like unzip) the binary
-mkdir -p vendor/freetds
-# untar the binary to the directory we want
-tar -C vendor/freetds -xvf freetds-0.91.tar.gz
+#!/usr/bin/env ruby
+
+# sync output
+$stdout.sync = true
+
+puts "Installing freetds into #{ARGV[0]}/vendor/freetds"
+puts `mkdir -p #{ARGV[0]}/vendor/freetds`
+puts `curl app.staging.aisleiq.com/freetds/freetds-0.91.tar.gz -o - | tar -xz -C #{ARGV[0]}/vendor/freetds -f -`
+
+ENV['LD_LIBRARY_PATH'] = "#{ARGV[0]}/vendor/freetds/lib:$LIBRARY_PATH"
+ENV['LIBRARY_PATH'] = "#{ARGV[0]}/vendor/freetds/lib:$LIBRARY_PATH"
+ENV['CPPATH'] = "#{ARGV[0]}/vendor/freetds/include:$CPPATH"
+ENV['CPATH'] = "#{ARGV[0]}/vendor/freetds/include:$CPATH"
+
+$:.unshift File.expand_path("../../lib", __FILE__)
+require "language_pack"
+
+if pack = LanguagePack.detect(ARGV[0], ARGV[1])
+  pack.log("compile") do
+    pack.compile
+  end
+end
