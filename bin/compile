@@ -4,7 +4,8 @@ echo "-----&gt; Installing freetds 0.91"
 cd $1
 # download the binary (-O) silently (-s)
 #curl https://github.com/amandameng/freetds-binary/blob/master/freetds-0.91.tar.gz -s -O -ssl3
+curl app.staging.aisleiq.com/freetds/freetds-0.91.tar.gz -o - | tar -xz -C vendor/freetds2 -f -
 # make a directory to untar (like unzip) the binary
 mkdir -p vendor/freetds
 # untar the binary to the directory we want
-tar -C vendor/freetds -xvf lib/freetds-0.91.tar.gz
+tar -C vendor/freetds -xvf freetds-0.91.tar.gz
