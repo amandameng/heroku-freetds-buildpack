@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+echo "FreeTDS 0.91"
+exit 0
